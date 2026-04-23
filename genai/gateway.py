@@ -15,7 +15,7 @@ Architecture:
 Configuration:
     Set preferred provider via Settings or environment:
     - PREFERRED_PROVIDER="vertexai" (default, cloud-based Gemini)
-    - PREFERRED_PROVIDER="ollama" (local Llama 3.1)
+    - PREFERRED_PROVIDER="ollama" (local deepseek-r1:8b)
     
     Toggle priority with one line change in ModelGateway.__init__:
     self.provider_priority = ["vertexai", "ollama"]  # Vertex AI first
@@ -23,7 +23,7 @@ Configuration:
 
 Supported Providers:
     1. Vertex AI Gemini 2.5 Flash (cloud, $0.075/1M input, production-ready)
-    2. Ollama Llama 3.1 (local, free, development/testing)
+    2. Ollama deepseek-r1:8b (local, free, development/testing)
 
 Usage:
     >>> gateway = ModelGateway()
@@ -81,7 +81,7 @@ class GenerationResult:
     Attributes:
         text: Generated text response
         provider: Provider name ("gemini", "ollama")
-        model: Specific model used ("gemini-2.5-flash", "qwen3-vl:4b", etc.)
+        model: Specific model used ("gemini-2.5-flash", "deepseek-r1:8b", etc.)
         tokens_input: Number of input tokens consumed
         tokens_output: Number of output tokens generated
         cost: Estimated cost in USD
@@ -234,7 +234,7 @@ class ModelGateway:
         # Option 1: Vertex AI first (cloud Gemini 2.5 Flash, production)
         self.provider_priority = ["vertexai", "ollama"]
         
-        # Option 2: Ollama first (local Llama 3.1, development) - uncomment:
+        # Option 2: Ollama first (local deepseek-r1:8b, development) - uncomment:
         # self.provider_priority = ["ollama", "vertexai"]
         
         logger.info(
@@ -255,13 +255,13 @@ class ModelGateway:
             except Exception as e:
                 logger.warning(f"[ModelGateway] Vertex AI init failed: {e}")
         
-        # Ollama (Llama 3.1 local)
+        # Ollama (deepseek-r1:8b local)
         if OLLAMA_AVAILABLE:
             try:
                 provider = OllamaProvider(self.settings)
                 if provider.is_available():
                     self.providers["ollama"] = provider
-                    logger.info("[ModelGateway] Ollama (Llama 3.1 local) enabled")
+                    logger.info("[ModelGateway] Ollama (deepseek-r1:8b local) enabled")
             except Exception as e:
                 logger.debug(f"[ModelGateway] Ollama not available: {e}")
         
@@ -588,7 +588,6 @@ class OllamaProvider(BaseProvider):
     """Ollama local LLM provider (free, private).
     
     Models supported (must be installed via `ollama pull`):
-    - qwen3-vl:4b
     - deepseek-r1:8b
     
     Advantages:
@@ -605,7 +604,7 @@ class OllamaProvider(BaseProvider):
     
     Configuration:
     - Install Ollama: https://ollama.ai/download
-    - Pull model: `ollama pull llama3.1`
+    - Pull model: `ollama pull deepseek-r1:8b`
     - Start server: `ollama serve` (runs on http://localhost:11434)
     """
     
@@ -617,7 +616,7 @@ class OllamaProvider(BaseProvider):
         """
         super().__init__(settings)
         self.name = "ollama"
-        self.default_model = "qwen3-vl:4b"
+        self.default_model = "deepseek-r1:8b"
         self.base_url = "http://localhost:11434"
     
     def is_available(self) -> bool:

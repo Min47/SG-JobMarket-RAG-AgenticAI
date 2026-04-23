@@ -147,11 +147,11 @@ You can create a simple visual pipeline with:
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ GCS Event: google.storage.object.v1.finalized                               │
 │         ↓ (triggers within seconds)                                         │
-│ Cloud Function: etl-gcs-to-bigquery (THIS IS YOUR IMPLEMENTATION)           │
+│ Cloud Function: etl-gcs-to-bigquery                                         │
 └─────────────────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ STAGE 1: RAW INGESTION (Your Code)                                          │
+│ STAGE 1: RAW INGESTION                                                      │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ 1. Download from GCS                                                        │
 │    • Source: gs://sg-job-market-data/raw/{source}/{timestamp}/dump.jsonl.gz │
@@ -177,7 +177,7 @@ You can create a simple visual pipeline with:
 └─────────────────────────────────────────────────────────────────────────────┘
                               ↓
 ┌───────────────────────────────────────────────────────────────────────────────────┐
-│ STAGE 2: TRANSFORMATION & CLEANING (Your Code)                                    │
+│ STAGE 2: TRANSFORMATION & CLEANING                                                │
 ├───────────────────────────────────────────────────────────────────────────────────┤
 │ 1. Extract from payload JSON                                                      │
 │    • Job fields: job_id, title, description, location, classification             │
@@ -250,6 +250,7 @@ You can create a simple visual pipeline with:
 │ • Dashboard: Real-time analytics, trend visualization, company insights     │
 │ • API: REST endpoints for external consumers                                │
 └─────────────────────────────────────────────────────────────────────────────┘
+```
 
 **Deployment Details:**
 - **Platform:** Cloud Functions Gen 2 (Python 3.13 runtime)

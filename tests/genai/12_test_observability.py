@@ -126,7 +126,7 @@ try:
     
     track_llm_call(
         provider="ollama",
-        model="llama3.1",
+        model="deepseek-r1:8b",
         operation="generate",
         duration=1.2,
         input_tokens=500,

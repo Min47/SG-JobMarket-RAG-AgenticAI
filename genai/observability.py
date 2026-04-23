@@ -444,7 +444,7 @@ def track_llm_call(
     
     Args:
         provider: LLM provider ("vertexai", "ollama")
-        model: Model name ("gemini-2.5-flash", "qwen3-vl:4b")
+        model: Model name ("gemini-2.5-flash", "deepseek-r1:8b")
         operation: Operation type ("generate", "grade", "rewrite")
         duration: Call duration in seconds
         input_tokens: Number of input tokens
