@@ -1,8 +1,9 @@
-# Phase 2.7: MCP Server Integration
-
-> Reference this file when working on: MCP protocol, Cursor IDE integration, or external AI assistant connectivity.
-
 ---
+name: mcp-server-integration
+description: Reference this file when working on MCP protocol, Cursor IDE integration, or external AI assistant connectivity.
+---
+
+# Phase 2.7: MCP Server Integration
 
 ## Implementation
 

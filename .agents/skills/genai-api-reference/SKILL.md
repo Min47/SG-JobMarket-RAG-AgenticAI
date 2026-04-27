@@ -1,8 +1,9 @@
-# Phase 2.4: GenAI API Reference
-
-> Reference this file when working on: FastAPI endpoints, request/response models, middleware, rate limits, or deployment.
-
 ---
+name: genai-api-reference
+description: Reference this file when working on FastAPI endpoints, request/response models, middleware, rate limits, or deployment.
+---
+
+# Phase 2.4: GenAI API Reference
 
 ## Endpoints
 

@@ -1,8 +1,9 @@
-# Phase 2.5: Guardrails & Security
-
-> Reference this file when working on: input/output validation, PII detection, injection blocking, or modifying security policies.
-
 ---
+name: guardrails-security
+description: Reference this file when working on input/output validation, PII detection, injection blocking, or modifying security policies.
+---
+
+# Phase 2.5: Guardrails & Security
 
 ## Input Guards (`InputGuardrails`)
 

@@ -1,8 +1,9 @@
-# Phase 1.2 - 1.4: ML Training Plan (Deferred)
-
-> Reference this file when resuming: ML model training, feature engineering, or model deployment.
-
 ---
+name: ml-training-plan
+description: Brief description of what this skill does
+---
+
+# Phase 1.2 - 1.4: ML Training Plan (Deferred)
 
 ## Status: Skeleton Only — Not Trained
 

@@ -1,8 +1,9 @@
-# Phase 1.1: NLP Embeddings Generation
-
-> Reference this file when working on: embeddings, vector search, SBERT model, Cloud Run Job pipeline, or BigQuery vector index.
-
 ---
+name: nlp-embeddings-generation
+description: Reference this file when working on embeddings, vector search, SBERT model, Cloud Run Job pipeline, or BigQuery vector index.
+---
+
+# Phase 1.1: NLP Embeddings Generation
 
 ## Status: ✅ COMPLETE
 
@@ -123,3 +124,40 @@ python -m nlp.generate_embeddings --full
 # Dry run
 python -m nlp.generate_embeddings --dry-run
 ```
+
+---
+
+## Phase 3 Upgrade (Planned)
+
+> See `plan_embedding_stack_upgrade.md` for full architecture, phases, and specs.
+
+### Planned Changes
+
+| Component | Current | Planned |
+|-----------|---------|---------|
+| **Embedding Model** | `all-MiniLM-L6-v2` (384-dim) | `bge-m3` (1024-dim, multilingual) |
+| **Vector Database** | BigQuery VECTOR_SEARCH | Qdrant Cloud (hybrid search + BM25) |
+| **Structured Storage** | BigQuery | Cloud SQL PostgreSQL (30-day active window) |
+| **Preprocessing** | Whole-job embedding | 5-section semantic chunking (Gemini 2.5 Flash) |
+| **Re-ranking** | None | `bge-reranker-v2-m3` cross-encoder |
+| **Query Standardization** | None | Gemini 2.5 Flash gated rephrase |
+
+### New Files (Planned)
+- `nlp/section_extractor.py` — Gemini 2.5 Flash → 5-section JSON
+- `nlp/chunking.py` — Section-to-vector mapping
+- `nlp/reranker.py` — Cross-encoder re-ranking
+- `utils/qdrant_client.py` — Qdrant connection & operations
+- `tests/nlp/test_section_extractor.py`, `test_bge_m3.py`, `test_reranker.py`
+
+### Modified Files (Planned)
+- `nlp/embeddings.py` — Swap SBERT → `bge-m3` with retrieval instruction prefix
+- `nlp/generate_embeddings.py` — Write to Qdrant (5 vectors per job) instead of BigQuery
+- `etl/transform.py` — Integrate section extraction into ETL
+- `utils/schemas.py` — Add 5 section columns to `CleanedJob`
+- `requirements.txt` — Add `qdrant-client`, `transformers>=4.36`
+
+### Migration Strategy
+1. **Dual-Write** — Old pipeline writes to BigQuery; new pipeline writes to Qdrant + PostgreSQL
+2. **Shadow Testing** — Run queries against both systems; compare metrics
+3. **Cutover** — Switch RAG reads to Qdrant; stop BigQuery vector writes (keep for history)
+---

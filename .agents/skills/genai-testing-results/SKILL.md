@@ -1,8 +1,9 @@
-# Phase 2.8: GenAI Testing Results
-
-> Reference this file when working on: tests, debugging failures, or adding new test scenarios.
-
 ---
+name: genai-testing-results
+description: Reference this file when working on tests, debugging failures, or adding new test scenarios.
+---
+
+# Phase 2.8: GenAI Testing Results
 
 ## Test Inventory (13 test files)
 

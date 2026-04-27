@@ -1,8 +1,9 @@
-# Phase 2.6: Observability & Monitoring
-
-> Reference this file when working on: metrics, tracing, Cloud Logging, or debugging production issues.
-
 ---
+name: observability-monitoring
+description: Reference this file when working on metrics, tracing, Cloud Logging, or debugging production issues.
+---
+
+# Phase 2.6: Observability & Monitoring
 
 ## OpenTelemetry Tracing
 

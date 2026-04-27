@@ -1,8 +1,9 @@
-# Phase 2.1 - 2.3: GenAI Architecture & Core Implementation
-
-> Reference this file when working on: RAG pipeline, LangGraph agent, tool adapters, or query flow logic.
-
 ---
+name: genai-architecture-core-implementation
+description: Reference this file when working on RAG pipeline, LangGraph agent, tool adapters, or query flow logic.
+---
+
+# Phase 2.1 - 2.3: GenAI Architecture & Core Implementation
 
 ## System Architecture
 
@@ -144,3 +145,52 @@ Safety:
 - Source normalization (jobstreet/JobStreet → JobStreet, mcf/MCF → MCF)
 - Parameterized SQL (injection-safe)
 - Error responses: `{"success": false, "error": "..."}`
+
+---
+
+## Phase 3 Upgrade (Planned)
+
+> See `plan_embedding_stack_upgrade.md` for full architecture, phases, and specs.
+
+### Updated RAG Pipeline
+
+```
+User Query
+    │
+    ▼
+[Gate] should_rephrase()? ──▶ Gemini 2.5 Flash standardizes query
+    │
+    ▼
+bge-m3 embeds query (1024-dim)
+    │
+    ▼
+Qdrant hybrid search (vector + BM25) → Top 50
+    │
+    ▼
+bge-reranker-v2-m3 scores [query, section] pairs → Top 10
+    │
+    ▼
+Gemini 2.5 Flash grades documents (0-10) → Filter < 5.0
+    │
+    ▼ (if avg score < 5.0)
+Gemini 2.5 Flash rewrites query → Retry loop (max 2)
+    │
+    ▼
+Gemini 2.5 Flash generates answer with citations
+```
+
+### Key Changes
+
+| Component | Current | Planned |
+|-----------|---------|---------|
+| **Vector Search** | BigQuery VECTOR_SEARCH | Qdrant Cloud hybrid search |
+| **Re-ranking** | None (grading only) | `bge-reranker-v2-m3` cross-encoder before grading |
+| **Query Preprocessing** | None | Gated query standardization (Gemini 2.5 Flash) |
+| **Document Context** | Whole job description | 5 extracted sections per job |
+| **Filters** | BigQuery SQL | Qdrant payload filters + PostgreSQL metadata |
+
+### Modified Files (Planned)
+- `genai/rag.py` — Insert `rerank_documents()` between retrieve and grade; update `retrieve_jobs()` for Qdrant
+- `genai/agent.py` — Add query standardization gate node; update LangGraph edges
+- `genai/tools/search.py` — Swap BigQuery VECTOR_SEARCH → Qdrant hybrid search
+- `genai/api.py` — Add query standardization trigger; update response models
