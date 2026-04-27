@@ -134,19 +134,19 @@ Each job produces 5 vectors (one per section: summary, responsibilities, require
 
 ## [Key Decisions]
 
-| Component | From | To | Rationale |
-|-----------|------|-----|-----------|
+| Component | Choice | Rationale |
+|-----------|--------|-----------|
 | **Embedding Model** | `bge-m3` (1024-dim) | SOTA multilingual, MIT license, handles Chinese natively |
 | **Vector Database** | **Qdrant Cloud** | <50ms queries, hybrid search, domain collections |
 | **Structured Storage** | **Cloud SQL PostgreSQL** | Metadata, filters, active listings 30-day window |
-| **Compute** | GCP Cloud Run | **GCP Cloud Run** (retained) | Existing infrastructure, pay-per-use |
-| **Preprocessing** | None (whole-job embedding) | **5-section semantic chunking** | Preserves structure, improves retrieval relevance |
-| **Re-ranking** | None | **bge-reranker-v2-m3** | +15-25% NDCG@10, eliminates false positives |
-| **Section Extraction** | N/A | **Gemini 2.5 Flash (all jobs)** | Handles messy HTML consistently |
-| **Query Standardization** | None | **Gemini 2.5 Flash (gated)** | Expands abbreviations, normalizes slang |
-| **Query Rewrite** | Gemini 2.5 Flash | **Gemini 2.5 Flash** (retained) | Already optimal, no change |
-| **Document Grading** | Gemini 2.5 Flash | **Gemini 2.5 Flash** (retained) | Already optimal, no change |
-| **Answer Generation** | Gemini 2.5 Flash | **Gemini 2.5 Flash** (retained) | Already optimal, no change |
+| **Compute** | **GCP Cloud Run** | Existing infrastructure, pay-per-use |
+| **Preprocessing** | **5-section semantic chunking** | Preserves structure, improves retrieval relevance |
+| **Re-ranking** | **bge-reranker-v2-m3** | +15-25% NDCG@10, eliminates false positives |
+| **Section Extraction** | **Gemini 2.5 Flash (all jobs)** | Handles messy HTML consistently |
+| **Query Standardization** | **Gemini 2.5 Flash (gated)** | Expands abbreviations, normalizes slang |
+| **Query Rewrite** | **Gemini 2.5 Flash** | Already optimal, no change |
+| **Document Grading** | **Gemini 2.5 Flash** | Already optimal, no change |
+| **Answer Generation** | **Gemini 2.5 Flash** | Already optimal, no change |
 
 ---
 

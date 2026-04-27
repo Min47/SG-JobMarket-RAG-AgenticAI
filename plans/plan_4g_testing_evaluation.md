@@ -15,7 +15,9 @@ The current GenAI stack has 13 passing tests but lacks systematic quality measur
 
 The evaluation uses a 50-query golden test set covering multiple languages (English, Chinese, Malay) and query categories (job-specific, salary-based, vague, filtered, edge cases). Each query has flexible relevance criteria and optional expected job IDs for computing Recall@N.
 
-LLM-as-judge scoring uses Gemini via the ModelGateway to rate answer relevance on a 0-10 scale. A PASS threshold of ≥ 8.0/10 ensures high-quality responses. Retrieval metrics include Recall@10 (what fraction of expected jobs appear in top 10) and NDCG@10 (normalized discounted cumulative gain).
+LLM-as-judge scoring uses Gemini via the ModelGateway to rate answer relevance on a 0-10 scale. A PASS threshold of ≥ 8.0/10 ensures high-quality responses.
+
+> **Known Limitation:** Using Gemini to judge Gemini-generated answers introduces potential same-family bias. For higher-stakes evaluation, cross-model judging (e.g., Ollama/deepseek-r1:8b judging Gemini outputs) is recommended. Retrieval metrics include Recall@10 (what fraction of expected jobs appear in top 10) and NDCG@10 (normalized discounted cumulative gain).
 
 CI/CD integration ensures regressions are caught before merge. The GitHub Actions workflow runs all tests on every PR and blocks merge if golden tests fail or the pass rate drops below 80%.
 
@@ -149,7 +151,7 @@ class RAGEvaluator:
 
 ## [Test Inventory]
 
-Current: 13 test files
+Target Test Suite: 13 test files
 
 | File | Task | Status |
 |------|------|--------|

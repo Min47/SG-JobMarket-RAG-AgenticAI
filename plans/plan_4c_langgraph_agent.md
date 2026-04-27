@@ -29,22 +29,23 @@ Key design decisions:
 │ LANGGRAPH AGENT (genai/agent.py)                                            │
 │ ─────────────────────────────────────────────────────────────────────────── │
 │ StateGraph with nodes:                                                      │
-│   ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐              │
-│   │ RETRIEVE │───▶│  GRADE   │───▶│ GENERATE│───▶│   END   │              │
-│   └──────────┘    └──────────┘    └──────────┘    └──────────┘              │
-│         │               │                                                   │
-│         │         (if low score)                                            │
-│         │               ▼                                                   │
-│         │         ┌──────────┐                                              │
-│         └────────▶│ REWRITE  │──────────┐                                  │
-│                   └──────────┘          │ (retry with rewritten query)      │
-│                                         ▼                                   │
+│                                                                             │
+│   ┌─────────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐          │
+│   │ REP/HRASE   │───▶│ RETRIEVE │───▶│  GRADE   │───▶│ GENERATE │───▶ END │
+│   │    GATE     │    └──────────┘    └──────────┘    └──────────┘          │
+│   └─────────────┘         │               │                                 │
+│        (if needed)        │         (if low score)                        │
+│                           │               ▼                                 │
+│                           │         ┌──────────┐                            │
+│                           └────────▶│ REWRITE  │──────────┐                │
+│                                     └──────────┘          │                │
+│                                                           ▼                │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### State & Graph
 
-- `AgentState` TypedDict with 9 fields:
+- `AgentState` TypedDict with 10 fields:
   - `messages`: Conversation history
   - `query`: Current query text
   - `original_query`: Preserved initial query
@@ -54,6 +55,7 @@ Key design decisions:
   - `rewrite_count`: Number of rewrite attempts (max 2)
   - `average_relevance_score`: Average score across ALL retrieved docs
   - `metadata`: Execution metadata (latency, cost, provider)
+  - `was_rephrased`: Whether query standardization was applied
 
 ### Conditional Edge Logic
 
@@ -85,6 +87,14 @@ Single sentence: 4 node functions, 1 conditional edge function, 2 interface func
 
 ```python
 # genai/agent.py
+def rephrase_node(state: AgentState) -> AgentState:
+    """Gated query standardization. Calls Gemini 2.5 Flash to:
+    - Expand abbreviations (gd → good, wfh → work from home)
+    - Normalize slang and informal language
+    - Preserve Singapore context
+    Only rephrases if should_rephrase() returns True.
+    """
+
 def retrieve_node(state: AgentState) -> AgentState:
     """Calls retrieve_jobs() with hybrid search, tracks metrics."""
 
@@ -140,6 +150,7 @@ class AgentState(TypedDict):
     rewrite_count: int
     average_relevance_score: float
     metadata: Dict[str, Any]
+    was_rephrased: bool
 ```
 
 ### JobMarketAgent
@@ -204,6 +215,7 @@ Single sentence: Integration tests for graph structure, node execution, and full
 | Streaming | Yields intermediate steps | `test_agent_execution.py` |
 | Context limit | Top 5 jobs sent to generation | Code review |
 | Average scoring | Computed on ALL docs pre-filter | Code review |
+| Rephrase gate | Triggers on abbreviations/slang | `test_agent_execution.py` |
 
 ---
 

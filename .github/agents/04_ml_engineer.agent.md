@@ -34,11 +34,9 @@ If there is any conflict, resolve precedence in this order:
 - Source of truth: `plans/plan_4a_embedding_stack.md`
 - Focus areas:
   - Migration from SBERT (all-MiniLM-L6-v2, 384-dim) to bge-m3 (1024-dim)
-  - Migration from BigQuery VECTOR_SEARCH to Qdrant Cloud
   - Section extraction with Gemini 2.5 Flash (5 sections per job)
   - Hybrid search (vector + BM25) configuration
   - Cross-encoder re-ranking with bge-reranker-v2-m3
-  - Operational rollout and rollback readiness
 - Status: Approved for Execution
 
 ## Part 4B: RAG Pipeline & Retrieval Quality

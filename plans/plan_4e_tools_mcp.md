@@ -25,7 +25,7 @@ All tools include safety measures: input validation via Pydantic, timeout handli
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ TOOL ADAPTERS (genai/tools/)                                                │
 │ ─────────────────────────────────────────────────────────────────────────── │
-│ @tool search_jobs     → Qdrant Cloud hybrid search + filters                    │
+│ @tool search_jobs     → Qdrant Cloud hybrid search + filters               │
 │ @tool get_job_details → Fetch full job info by ID                           │
 │ @tool aggregate_stats → Salary ranges, job counts by category               │
 │ @tool similar_jobs    → Find N most similar jobs to a given job             │

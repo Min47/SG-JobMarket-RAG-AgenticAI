@@ -100,6 +100,7 @@ Single sentence: 2 core files, 1 Dockerfile, 1 Cloud Build config.
 |------|---------|
 | `genai/api.py` | FastAPI app with all endpoints, middleware, models |
 | `genai/gateway.py` | ModelGateway with VertexAIProvider and OllamaProvider |
+| `genai/cache_middleware.py` | FastAPI middleware for query result cache short-circuiting |
 
 ### Deployment Files
 

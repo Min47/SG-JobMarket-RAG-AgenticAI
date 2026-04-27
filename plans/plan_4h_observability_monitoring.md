@@ -13,7 +13,7 @@ Single sentence: Full-stack observability with 21 Prometheus metrics, OpenTeleme
 Multiple paragraphs:
 The observability layer provides production visibility into every layer of the GenAI stack. OpenTelemetry traces follow requests from the FastAPI layer through the LangGraph agent, RAG pipeline, and Model Gateway. Prometheus metrics expose quantitative data for alerting and trend analysis.
 
-21 metrics are tracked across 6 categories: Request (count, latency, active requests), LLM (calls, tokens, cost, latency), RAG (retrieval latency, count, grading latency, relevance scores, rewrites), Agent (execution latency, step count), Guardrails (blocks by type), and System (version metadata).
+19 metrics are tracked across 6 categories (16 core + 3 cache metrics from Plan 4B): Request (count, latency, active requests), LLM (calls, tokens, cost, latency), RAG (retrieval latency, count, grading latency, relevance scores, rewrites), Agent (execution latency, step count), Guardrails (blocks by type), and System (version metadata).
 
 Cloud Trace and Cloud Monitoring provide centralized aggregation in GCP. The FastAPI `/metrics` endpoint serves Prometheus-format data for scraping. A Streamlit dashboard (see Plan 4I for dashboard details) visualizes live metrics for operations teams.
 
@@ -34,7 +34,7 @@ Additional metrics for caching and cost tracking are added as part of Plan 4B (R
 │  ├── add_span_attributes() for custom metadata                             │
 │  └── Cloud Trace exporter (production)                                      │
 │                                                                             │
-│  Prometheus Metrics (21 total)                                              │
+│  Prometheus Metrics (19 total)                                              │
 │  ├── Request: REQUEST_COUNT, REQUEST_LATENCY, ACTIVE_REQUESTS              │
 │  ├── LLM: LLM_CALL_COUNT, LLM_TOKEN_COUNT, LLM_COST, LLM_LATENCY         │
 │  ├── RAG: RETRIEVAL_LATENCY, RETRIEVAL_COUNT, GRADING_LATENCY,            │

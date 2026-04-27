@@ -104,7 +104,7 @@ File: `ml/features.py`
 
 | Feature | Source | Shape |
 |---------|--------|-------|
-| `embedding` | job_embeddings | 384 floats |
+| `embedding` | job_embeddings | 1024 floats |
 | `embedding_pca_2d` | Derived | 2 floats (for visualization) |
 | `embedding_pca_10d` | Derived | 10 floats (for ML) |
 

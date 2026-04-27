@@ -60,11 +60,16 @@ Single sentence: 4 new files, 2 modified files.
 
 | File | Purpose |
 |------|---------|
-| `genai/cache.py` | TTLCache wrapper for query results + embedding cache |
 | `genai/cache_middleware.py` | FastAPI middleware: intercept requests → cache hit → short-circuit response |
-| `genai/grading_parallel.py` | Parallel document grading using asyncio/concurrent.futures |
 | `dashboard/app.py` | Streamlit monitoring dashboard (overwrites existing skeleton) |
 | `dashboard/metrics_fetcher.py` | Fetch Prometheus metrics, Cloud Trace spans, PostgreSQL logs |
+
+### Files from Plan 4B (RAG Pipeline)
+
+| File | Source Plan | Purpose |
+|------|-------------|---------|
+| `genai/cache.py` | Plan 4B | TTLCache wrapper for query results + embedding cache |
+| `genai/grading_parallel.py` | Plan 4B | Parallel document grading using asyncio/concurrent.futures |
 
 ### Modified Files
 

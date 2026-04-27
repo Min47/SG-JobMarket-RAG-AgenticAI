@@ -17,7 +17,7 @@ The pipeline is built around four core operations: `embed_query()` for query vec
 
 Performance optimizations include an in-memory TTL cache for both query embeddings and full query results, plus parallelized document grading using a thread pool executor. These reduce redundant LLM calls and improve latency on repeated or similar queries.
 
-The current pipeline uses SBERT `all-MiniLM-L6-v2` (384-dim) embeddings with Qdrant Cloud. Plan 4A will upgrade to bge-m3 (1024-dim) with cross-encoder re-ranking.
+This plan builds the RAG pipeline on the embedding stack established in Plan 4A (bge-m3 + Qdrant Cloud + PostgreSQL).
 
 ---
 
@@ -33,7 +33,7 @@ The current pipeline uses SBERT `all-MiniLM-L6-v2` (384-dim) embeddings with Qdr
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ EMBED QUERY (genai/rag.py)                                                  │
 │ ─────────────────────────────────────────────────────────────────────────── │
-│ • SBERT all-MiniLM-L6-v2 → 384-dim embedding                                │
+│ • bge-m3 → 1024-dim embedding                                               │
 │ • L2-normalized for cosine similarity                                       │
 │ • Singleton pattern to avoid model reload                                   │
 │ • Input validation: empty, short (<3 chars), long (>1000 chars)             │
@@ -205,23 +205,23 @@ pip install cachetools==5.3.3
 
 ---
 
-## [Integration with Plan 4A]
+## [Assumed Stack Capabilities]
 
-When the embedding stack is upgraded (see `plan_4a_embedding_stack.md`), the RAG pipeline will incorporate the following changes:
+This plan assumes the embedding stack from Plan 4A is in place. The RAG pipeline leverages:
 
-| Component | Current | After 4A Upgrade |
-|-----------|---------|------------------|
-| **Vector Search** | Qdrant Cloud hybrid search | Qdrant Cloud hybrid search |
-| **Re-ranking** | None (grading only) | `bge-reranker-v2-m3` cross-encoder before grading |
-| **Query Preprocessing** | None | Gated query standardization (Gemini 2.5 Flash) |
-| **Document Context** | Whole job description | 5 extracted sections per job |
-| **Filters** | Qdrant payload filters + PostgreSQL metadata | Qdrant payload filters + PostgreSQL metadata |
-| **Embedding Dimensions** | 384 | 1024 |
+| Capability | Source |
+|-----------|--------|
+| **Vector Search** | Qdrant Cloud hybrid search (vector + BM25) |
+| **Re-ranking** | `bge-reranker-v2-m3` cross-encoder before grading |
+| **Query Preprocessing** | Gated query standardization (Gemini 2.5 Flash) |
+| **Document Context** | 5 extracted sections per job |
+| **Filters** | Qdrant payload filters + PostgreSQL metadata |
+| **Embedding Dimensions** | 1024 (bge-m3) |
 
-Modified files for 4A integration:
-- `genai/rag.py` — Insert `rerank_documents()` between retrieve and grade; update `retrieve_jobs()` for Qdrant
-- `genai/agent.py` — Add query standardization gate node; update LangGraph edges
-- `genai/api.py` — Add query standardization trigger; update response models
+Coordinated modifications across plans:
+- Plan 4A (`genai/rag.py`) — `rerank_documents()` between retrieve and grade; `retrieve_jobs()` for Qdrant
+- Plan 4C (`genai/agent.py`) — Query standardization gate node; LangGraph edges
+- Plan 4F (`genai/api.py`) — Query standardization trigger; response models
 
 ---
 
