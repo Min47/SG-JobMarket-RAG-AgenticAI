@@ -15,7 +15,7 @@ The tools layer provides reusable, type-safe adapters for searching jobs, retrie
 
 The MCP (Model Context Protocol) server exposes these same four tools over stdio transport, enabling external AI assistants like Cursor IDE to query the SG Job Market database directly. The MCP server reuses the existing tool adapters with no code duplication.
 
-All tools include safety measures: input validation via Pydantic, timeout handling (30s max per BigQuery query), source normalization (jobstreet/JobStreet → JobStreet, mcf/MCF → MCF), and parameterized SQL for injection safety.
+All tools include safety measures: input validation via Pydantic, timeout handling (30s max per database query), source normalization (jobstreet/JobStreet → JobStreet, mcf/MCF → MCF), and parameterized SQL for injection safety.
 
 ---
 
@@ -25,7 +25,7 @@ All tools include safety measures: input validation via Pydantic, timeout handli
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ TOOL ADAPTERS (genai/tools/)                                                │
 │ ─────────────────────────────────────────────────────────────────────────── │
-│ @tool search_jobs     → BigQuery Vector Search + filters                    │
+│ @tool search_jobs     → Qdrant Cloud hybrid search + filters                    │
 │ @tool get_job_details → Fetch full job info by ID                           │
 │ @tool aggregate_stats → Salary ranges, job counts by category               │
 │ @tool similar_jobs    → Find N most similar jobs to a given job             │
@@ -78,7 +78,7 @@ Single sentence: 4 tool files and 1 MCP server file.
 
 ### get_job_details
 
-- BigQuery SELECT by job_id + source
+- PostgreSQL SELECT by job_id + source
 - Returns full job description, salary, location, requirements
 
 ### aggregate_stats
@@ -88,7 +88,7 @@ Single sentence: 4 tool files and 1 MCP server file.
 
 ### find_similar_jobs
 
-- VECTOR_SEARCH from reference job's embedding
+- Qdrant similarity search from reference job's embedding
 - Returns N most similar jobs with similarity scores
 
 ---
@@ -96,7 +96,7 @@ Single sentence: 4 tool files and 1 MCP server file.
 ## [Safety]
 
 - Input validation via Pydantic (all tools)
-- Timeout handling (30s max per BigQuery query)
+- Timeout handling (30s max per database query)
 - Source normalization (jobstreet/JobStreet → JobStreet, mcf/MCF → MCF)
 - Parameterized SQL (injection-safe)
 - Error responses: `{"success": false, "error": "..."}`

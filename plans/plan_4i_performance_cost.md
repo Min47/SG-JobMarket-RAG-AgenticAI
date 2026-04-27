@@ -64,7 +64,7 @@ Single sentence: 4 new files, 2 modified files.
 | `genai/cache_middleware.py` | FastAPI middleware: intercept requests → cache hit → short-circuit response |
 | `genai/grading_parallel.py` | Parallel document grading using asyncio/concurrent.futures |
 | `dashboard/app.py` | Streamlit monitoring dashboard (overwrites existing skeleton) |
-| `dashboard/metrics_fetcher.py` | Fetch Prometheus metrics, Cloud Trace spans, BigQuery logs |
+| `dashboard/metrics_fetcher.py` | Fetch Prometheus metrics, Cloud Trace spans, PostgreSQL logs |
 
 ### Modified Files
 
@@ -153,7 +153,7 @@ def grade_documents_parallel(
 |--------|------|
 | `/metrics` endpoint | Prometheus metrics (requests, latency, cost, cache) |
 | Cloud Trace | Distributed trace spans |
-| BigQuery logs | Recent requests with latency and cost |
+| PostgreSQL logs | Recent requests with latency and cost |
 
 ---
 

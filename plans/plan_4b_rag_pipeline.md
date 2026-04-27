@@ -13,11 +13,11 @@ Single sentence: Production-grade RAG pipeline for semantic job search with cach
 Multiple paragraphs:
 The RAG pipeline is the central intelligence layer of the GenAI stack. It transforms user queries into vector embeddings, retrieves relevant job listings via hybrid search, grades each result for relevance using an LLM, and synthesizes a cited answer.
 
-The pipeline is built around four core operations: `embed_query()` for query vectorization, `retrieve_jobs()` for semantic retrieval from BigQuery VECTOR_SEARCH, `grade_documents()` for LLM-based relevance scoring, and `generate_answer()` for contextual response synthesis. A `rag_pipeline()` function orchestrates these steps into a single entry point.
+The pipeline is built around four core operations: `embed_query()` for query vectorization, `retrieve_jobs()` for semantic retrieval from Qdrant Cloud, `grade_documents()` for LLM-based relevance scoring, and `generate_answer()` for contextual response synthesis. A `rag_pipeline()` function orchestrates these steps into a single entry point.
 
 Performance optimizations include an in-memory TTL cache for both query embeddings and full query results, plus parallelized document grading using a thread pool executor. These reduce redundant LLM calls and improve latency on repeated or similar queries.
 
-The current pipeline uses SBERT `all-MiniLM-L6-v2` (384-dim) embeddings with BigQuery VECTOR_SEARCH. Future integration with the bge-m3 stack (Plan 4A) will upgrade retrieval to Qdrant Cloud with cross-encoder re-ranking.
+The current pipeline uses SBERT `all-MiniLM-L6-v2` (384-dim) embeddings with Qdrant Cloud. Plan 4A will upgrade to bge-m3 (1024-dim) with cross-encoder re-ranking.
 
 ---
 
@@ -44,7 +44,7 @@ The current pipeline uses SBERT `all-MiniLM-L6-v2` (384-dim) embeddings with Big
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ RETRIEVE JOBS (genai/rag.py)                                                │
 │ ─────────────────────────────────────────────────────────────────────────── │
-│ • BigQuery VECTOR_SEARCH with COSINE distance                               │
+│ • Qdrant Cloud hybrid search (vector + BM25)                               │
 │ • Hybrid scoring: 70% vector similarity + 30% keyword matching              │
 │ • Filters: location (LIKE), min/max salary, work_type, classification       │
 │ • Deduplication via ROW_NUMBER() on append-only cleaned_jobs                │
@@ -211,17 +211,16 @@ When the embedding stack is upgraded (see `plan_4a_embedding_stack.md`), the RAG
 
 | Component | Current | After 4A Upgrade |
 |-----------|---------|------------------|
-| **Vector Search** | BigQuery VECTOR_SEARCH | Qdrant Cloud hybrid search |
+| **Vector Search** | Qdrant Cloud hybrid search | Qdrant Cloud hybrid search |
 | **Re-ranking** | None (grading only) | `bge-reranker-v2-m3` cross-encoder before grading |
 | **Query Preprocessing** | None | Gated query standardization (Gemini 2.5 Flash) |
 | **Document Context** | Whole job description | 5 extracted sections per job |
-| **Filters** | BigQuery SQL | Qdrant payload filters + PostgreSQL metadata |
+| **Filters** | Qdrant payload filters + PostgreSQL metadata | Qdrant payload filters + PostgreSQL metadata |
 | **Embedding Dimensions** | 384 | 1024 |
 
 Modified files for 4A integration:
 - `genai/rag.py` — Insert `rerank_documents()` between retrieve and grade; update `retrieve_jobs()` for Qdrant
 - `genai/agent.py` — Add query standardization gate node; update LangGraph edges
-- `genai/tools/search.py` — Swap BigQuery VECTOR_SEARCH → Qdrant hybrid search
 - `genai/api.py` — Add query standardization trigger; update response models
 
 ---

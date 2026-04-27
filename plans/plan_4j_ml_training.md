@@ -20,7 +20,7 @@ Three models are planned:
 
 Feature engineering extracts numerical features (salary transforms, text lengths, days since posted), categorical features (one-hot encoding for location, work type, source), and embedding features (384-dim SBERT embeddings, with PCA reduction planned).
 
-The model registry uses a versioned directory structure with joblib serialization, JSON configs, and GCS backup. Batch predictions run daily via Cloud Scheduler, writing results to a BigQuery `ml_predictions` table.
+The model registry uses a versioned directory structure with joblib serialization, JSON configs, and GCS backup. Batch predictions run daily via Cloud Scheduler, writing results to a PostgreSQL `ml_predictions` table.
 
 > **Note**: This plan is deferred until the GenAI stack (Plans 4A-4I) is productionized.
 
@@ -50,7 +50,7 @@ The model registry uses a versioned directory structure with joblib serializatio
 │                                                                             │
 │  Batch Predictions (ml/predict.py)                                          │
 │  ├── Daily via Cloud Scheduler                                              │
-│  └── Output: BigQuery ml_predictions table                                 │
+│  └── Output: PostgreSQL ml_predictions table                                 │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -120,7 +120,7 @@ File: `ml/features.py`
 
 - PCA reduction for embeddings
 - `get_feature_names()` returns empty list
-- No BigQuery integration (`vw_ml_features` view not created)
+- No PostgreSQL integration (`vw_ml_features` view not created)
 - No sklearn Pipeline or transformer persistence
 
 ### Feature Storage
@@ -178,7 +178,7 @@ File: `ml/salary_predictor.py`
 
 #### Not Implemented
 
-- No training data loaded from BigQuery
+- No training data loaded from PostgreSQL
 - No model trained or saved to `models/`
 
 #### Hyperparameter Tuning
@@ -338,7 +338,7 @@ def predict_cluster_batch(job_ids: List[str]) -> Dict[str, int]
 def predict_all_new_jobs() -> Dict[str, Any]
 ```
 
-- Write predictions to BigQuery `ml_predictions` table
+- Write predictions to PostgreSQL `ml_predictions` table
 - Schedule daily predictions (Cloud Scheduler → Cloud Function)
 
 ### Predictions Table Schema
@@ -376,9 +376,9 @@ class MLPrediction:
 ## [Resumption Checklist]
 
 When resuming ML development:
-- [ ] Create BigQuery `vw_ml_features` view
+- [ ] Create PostgreSQL `vw_ml_features` view
 - [ ] Implement PCA for embeddings
-- [ ] Load training data from BigQuery
+- [ ] Load training data from PostgreSQL
 - [ ] Train salary predictor with LightGBM
 - [ ] Tune hyperparameters with Optuna
 - [ ] Train job clusterer with KMeans

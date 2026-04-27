@@ -68,7 +68,7 @@ Single sentence: 1 core observability file, 1 dashboard file.
 | File | Purpose |
 |------|---------|
 | `dashboard/app.py` | Streamlit monitoring dashboard (overwrites existing skeleton) |
-| `dashboard/metrics_fetcher.py` | Fetch Prometheus metrics, Cloud Trace spans, BigQuery logs |
+| `dashboard/metrics_fetcher.py` | Fetch Prometheus metrics, Cloud Trace spans, PostgreSQL logs |
 
 ---
 

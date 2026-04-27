@@ -85,7 +85,7 @@ Security hardening includes Trivy vulnerability scanning on all Docker builds, w
 - `ChatRequest` / `ChatResponse` — Agent conversations with conversation_id
 - `SearchRequest` / `SearchResponse` — Vector search with filters
 - `StatsRequest` / `StatsResponse` — Analytics grouping
-- `HealthResponse` — Service + dependency status (BigQuery, Vertex AI, embeddings)
+- `HealthResponse` — Service + dependency status (PostgreSQL, Qdrant, Vertex AI, embeddings)
 - `ErrorResponse` — Standardized errors with request_id
 
 ---
