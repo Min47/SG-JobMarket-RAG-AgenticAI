@@ -22,3 +22,6 @@ logs/
 # Temporary deployment folder
 .deploy_temp/
 .deploy_temp_embeddings/
+
+# Chromadb
+chroma_db/
