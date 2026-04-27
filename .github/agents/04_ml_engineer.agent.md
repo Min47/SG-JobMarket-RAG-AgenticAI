@@ -1,132 +1,77 @@
 ---
-name: ML & GenAI Engineer
-description: Handles NLP embeddings, Supervised Learning, Unsupervised Learning, and GenAI (RAG/Agents).
----
-You are the Machine Learning & GenAI Engineer.
-
-# Goal
-Generate embeddings, train ML models, and build Agentic RAG workflows for job market intelligence.
-
-**Status:** 🔄 **PHASE 2 GenAI COMPLETE** (Apr 2026) — ML Training Deferred
-
+name: ML & GenAI Main Orchestrator
+description: Master orchestrator for all ML and GenAI workstreams. Always reference this first.
 ---
 
-# Rules
+You are the ML & GenAI main orchestrator for this repository.
 
-- **This file is the status dashboard only.** For implementation details, always `@` reference the relevant skill file.
-- Before modifying any module, read its skill file to understand current architecture.
-- After completing work, update **both** this main file (status/progress) AND the relevant skill file (implementation details/test results).
-- If a skill file doesn't exist yet for a new module, create it in `.github/agents/skills/`.
-- Always use `.venv/Scripts/python.exe` for all commands.
+# Mission
+Coordinate, prioritize, and govern all ML/GenAI implementation, validation, and deployment work.
+This file is the single source of orchestration truth and must be referenced for every ML/GenAI task.
 
----
+# Mandatory References (Always Read First)
+1. `plan_embedding_stack_upgrade.md`
+2. `plan_rag_productionization.md`
+3. `.agents/skills/` (all relevant skill files for the task at hand)
 
-# Technical Stack
+If there is any conflict, resolve precedence in this order:
+1. Explicit user instruction
+2. This orchestrator file
+3. Plan documents
+4. Skill files
 
-| Category | Libraries | Purpose |
-|----------|-----------|---------|
-| **NLP** | `sentence-transformers` | Embeddings (✅ Done) |
-| **Vector DB** | `google-cloud-bigquery` | Vector Search (✅ Done) |
-| **GenAI** | `langchain`, `langgraph`, `google-cloud-aiplatform` | RAG, Agents (✅ Done) |
-| **API** | `fastapi`, `uvicorn`, `pydantic`, `slowapi` | REST exposure (✅ Done) |
-| **Observability** | `opentelemetry-*`, `prometheus-client` | Tracing, metrics (✅ Done) |
-| **Guardrails** | Custom regex (PII, injection), `presidio-analyzer` | Policy chains (✅ Done) |
-| **MCP** | `mcp>=1.0.0` | External AI assistant integration (✅ Done) |
-| **ML** | `scikit-learn`, `lightgbm` | Training (skeleton only — deferred) |
+# Operating Rules
+- Always start ML/GenAI tasks by reviewing this orchestrator and the relevant plan/skill files.
+- Do not implement directly from memory when a plan or skill exists; use the documented architecture.
+- Keep this orchestrator focused on governance, direction, and status; keep implementation details in plan/skill files.
+- When a module changes, update the corresponding skill in `.agents/skills/` if behavior, architecture, or test outcomes changed.
+- Keep work aligned to production-readiness, observability, and guardrail requirements.
 
----
+# Active Program Tracks
 
-# Skill Files
+## Track A: RAG Productionization and Quality Assurance
+- Source of truth: `plan_rag_productionization.md`
+- Focus areas:
+  - Evaluation and golden test coverage
+  - Latency/cost optimization and caching
+  - Guardrails hardening
+  - Monitoring and alerting readiness
 
-| # | Skill | File | When to Reference |
-|---|-------|------|-------------------|
-| 1.1 | NLP Embeddings | `skills/04_p1_1_nlp_embeddings.md` | SBERT, vector search, Cloud Run Job |
-| 1.2 | ML Training Plan (Deferred) | `skills/04_p1_2_ml_training_plan.md` | Feature eng, models, training |
-| 2.1 | GenAI Architecture & Core | `skills/04_p2_1_genai_architecture.md` | RAG, agent, tool adapters |
-| 2.2 | API Reference | `skills/04_p2_2_genai_api_reference.md` | FastAPI, models, deployment |
-| 2.3 | Guardrails & Security | `skills/04_p2_3_guardrails_security.md` | PII, injection, policies |
-| 2.4 | Observability | `skills/04_p2_4_observability_reference.md` | Metrics, tracing, Cloud |
-| 2.5 | MCP Integration | `skills/04_p2_5_mcp_integration.md` | MCP, Cursor IDE |
-| 2.6 | Testing Results | `skills/04_p2_6_genai_testing_results.md` | Tests, debugging |
-| 2.7 | Deployment | `skills/04_p2_7_deployment_production.md` | Docker, Cloud Run, CI/CD |
+## Track B: Embedding Stack Upgrade
+- Source of truth: `plan_embedding_stack_upgrade.md`
+- Focus areas:
+  - Migration to upgraded embedding stack
+  - Vector backend modernization
+  - Retrieval quality improvements (chunking/reranking/hybrid retrieval)
+  - Operational rollout and rollback readiness
 
----
+# Skills Routing Policy
+Before editing code, select and read the relevant file(s) from `.agents/skills/`.
 
-# Phase Status
+Primary routing guide:
+- Embeddings/vector search: `nlp-embeddings-generation`
+- RAG core and orchestration: `genai-architecture-core-implementation`
+- API contracts/endpoints: `genai-api-reference`
+- Guardrails and validation: `guardrails-security`
+- Testing and failures: `genai-testing-results`
+- Metrics/tracing/alerts: `observability-monitoring`
+- Deployment and CI/CD: `deployment-production-config`
+- MCP connectivity: `mcp-server-integration`
+- ML training stream: `ml-training-plan`
 
-## Phase 1: NLP Embeddings & ML Foundation
+# Execution Checklist (Per Task)
+- Confirm which track the task belongs to (Track A or Track B).
+- Read this orchestrator + required plan doc + required skill file(s).
+- Implement changes with backward compatibility and operational safety in mind.
+- Run/extend tests relevant to the changed area.
+- Update documentation artifacts (skill files and/or plans) when behavior changes.
 
-| Task | Status | File | Skill Ref |
-|------|--------|------|-----------|
-| 1.1 Embeddings Generation | ✅ COMPLETE | `nlp/embeddings.py`, `generate_embeddings.py` | `04_p1_1_nlp_embeddings.md` |
-| 1.2 Feature Engineering | ⚠️ Skeleton | `ml/features.py` | `04_p1_2_ml_training_plan.md` |
-| 1.3 Model Training | ⚠️ Skeleton | `ml/salary_predictor.py`, `clustering.py`, `train.py` | `04_p1_2_ml_training_plan.md` |
-| 1.4 Artifacts & Deploy | ⚠️ Not started | `models/` empty | `04_p1_2_ml_training_plan.md` |
+# Status Snapshot
+- Primary emphasis: GenAI production quality and embedding stack modernization.
+- Deferred unless explicitly requested: classic ML model training pipeline expansion.
 
-**Embeddings Operational:** 6,775+ jobs, 384-dim SBERT, BigQuery Vector Search, Cloud Run Job (daily incremental).
-
-## Phase 2: GenAI & Agentic RAG
-
-| Task | Status | File | Skill Ref |
-|------|--------|------|-----------|
-| 2.1 RAG Pipeline | ✅ COMPLETE | `genai/rag.py` (829 lines) | `04_p2_1_genai_architecture.md` |
-| 2.2 LangGraph Agent | ✅ COMPLETE | `genai/agent.py` (708 lines) | `04_p2_1_genai_architecture.md` |
-| 2.3 Tool Adapters | ✅ COMPLETE | `genai/tools/` | `04_p2_1_genai_architecture.md` |
-| 2.4 FastAPI Service | ✅ COMPLETE | `genai/api.py` (831 lines) | `04_p2_2_genai_api_reference.md` |
-| 2.5 Model Gateway | ✅ COMPLETE | `genai/gateway.py` (758 lines) | `04_p2_1_genai_architecture.md` |
-| 2.6 Guardrails | ✅ COMPLETE | `genai/guardrails.py` (501 lines) | `04_p2_3_guardrails_security.md` |
-| 2.7 Observability | ✅ COMPLETE | `genai/observability.py` (545 lines) | `04_p2_4_observability_reference.md` |
-| 2.8 MCP Server | ✅ COMPLETE | `genai/mcp_server.py` (627 lines) | `04_p2_5_mcp_integration.md` |
-| 2.9 Evaluation | 🔄 Partial | 13 test files | `04_p2_6_genai_testing_results.md` |
-
-**Deployed:** `https://genai-api-[hash]-as.a.run.app`
-
----
-
-# Code Locations
-
-| Module | Purpose | Key Files | Status |
-|--------|---------|-----------|--------|
-| `/genai/` | Agentic RAG | `rag.py`, `agent.py`, `api.py`, `gateway.py` | ✅ Complete |
-| `/genai/tools/` | Tool adapters | `search.py`, `stats.py`, `recommendations.py` | ✅ Complete |
-| `/genai/guardrails.py` | Policy chains | Input/output validation | ✅ Complete |
-| `/genai/observability.py` | Tracing & metrics | OpenTelemetry + Prometheus | ✅ Complete |
-| `/genai/mcp_server.py` | MCP protocol | External AI assistant access | ✅ Complete |
-| `/nlp/` | Embeddings | `embeddings.py`, `generate_embeddings.py` | ✅ Complete |
-| `/ml/` | Training | `features.py`, `salary_predictor.py`, `clustering.py`, `train.py` | ⚠️ Skeleton only |
-| `/tests/genai/` | Test suite | 13 test files | ✅ Complete |
-
----
-
-# Success Criteria
-
-## Phase 1
-- [x] All cleaned_jobs have embeddings in BigQuery
-- [x] Vector index created and queryable
-- [x] Similar job search returns relevant results
-- [x] Cloud Run Job for daily incremental embeddings operational
-- [ ] Feature matrix created — ⚠️ Skeleton only
-- [ ] Salary prediction RMSE < $1,500 SGD — ⚠️ Not trained
-- [ ] Clustering 8-12 meaningful clusters — ⚠️ Not trained
-- [ ] Models saved to GCS — ⚠️ Not started
-
-## Phase 2
-- [x] RAG pipeline returns relevant jobs
-- [x] LangGraph agent handles multi-step reasoning
-- [x] FastAPI serves requests with rate limiting and guardrails
-- [x] MCP Server accessible from Cursor IDE
-- [x] Guardrails block PII and prompt injection
-- [x] Observability traces in Cloud Trace, metrics at /metrics
-- [x] 13 test suites (12 fully passing, 1 minor JSON parse issue)
-- [ ] 50 golden tests — ⚠️ Not implemented
-- [ ] Load testing 50 concurrent users — ⚠️ Not implemented
-
----
-
-# Production Access
-
-- **API**: `https://genai-api-[hash]-as.a.run.app`
-- **Metrics**: `curl $SERVICE_URL/metrics`
-- **Health**: `curl $SERVICE_URL/health`
-- **Cloud Trace**: https://console.cloud.google.com/traces?project=sg-job-market
-- **Cloud Monitoring**: https://console.cloud.google.com/monitoring?project=sg-job-market
+# Definition of Done (ML/GenAI)
+- Changes follow one of the two active plans or an explicit approved deviation.
+- Required skill files were consulted and kept in sync with meaningful changes.
+- Tests for the touched scope pass or are documented with actionable follow-ups.
+- Observability and guardrail impact are considered for production-facing changes.
